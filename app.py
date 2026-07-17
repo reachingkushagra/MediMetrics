@@ -271,3 +271,57 @@ def get_department(department_id: int):
         raise HTTPException(status_code=404, detail="Department not found")
 
     return department
+
+@app.put("/departments/{department_id}")
+def update_department(
+    department_id: int,
+    department: DepartmentUpdate,
+):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE department
+        SET
+            department_name = ?,
+            location = ?
+        WHERE department_id = ?
+        """,
+        (
+            department.department_name,
+            department.location,
+            department_id,
+        ),
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Department not found")
+
+    conn.close()
+
+    return {"message": "Department updated successfully"}
+
+
+@app.delete("/departments/{department_id}")
+def delete_department(department_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM department WHERE department_id = ?",
+        (department_id,),
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Department not found")
+
+    conn.close()
+
+    return {"message": "Department deleted successfully"}
