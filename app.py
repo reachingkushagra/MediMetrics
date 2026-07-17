@@ -170,3 +170,44 @@ def update_patient(patient_id: int, patient: PatientCreate):
         "message": "Patient updated successfully",
         "patient_id": patient_id
     }
+@app.delete("/patients/{patient_id}")
+def delete_patient(patient_id: int):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check if patient exists
+    cursor.execute(
+        """
+        SELECT *
+        FROM patient
+        WHERE patient_id = ?
+        """,
+        (patient_id,)
+    )
+
+    patient = cursor.fetchone()
+
+    if patient is None:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    # Delete the patient
+    cursor.execute(
+        """
+        DELETE FROM patient
+        WHERE patient_id = ?
+        """,
+        (patient_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "message": "Patient deleted successfully",
+        "patient_id": patient_id
+    }
