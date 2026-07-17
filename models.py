@@ -5,9 +5,7 @@ def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
 
-    # -----------------------------
-    # Department Table
-    # -----------------------------
+    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS department (
         department_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,9 +14,7 @@ def create_tables():
     )
     """)
 
-    # -----------------------------
-    # Doctor Table
-    # -----------------------------
+    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS doctor (
         doctor_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,9 +29,7 @@ def create_tables():
     )
     """)
 
-    # -----------------------------
-    # Patient Table
-    # -----------------------------
+   
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS patient (
         patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,9 +44,7 @@ def create_tables():
     )
     """)
 
-    # -----------------------------
-    # Appointment Status Table
-    # -----------------------------
+    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS appointment_status (
         status_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,9 +52,7 @@ def create_tables():
     )
     """)
 
-    # -----------------------------
-    # Appointment Table
-    # -----------------------------
+    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS appointment (
         appointment_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,4 +80,4 @@ def create_tables():
     conn.commit()
     conn.close()
 
-    print("All tables created successfully!")
+    print("All the tables created successfully!")
