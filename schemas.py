@@ -34,3 +34,19 @@ class PatientResponse(BaseModel):
     email: EmailStr
     address: str
     registration_date: date
+
+
+class DepartmentCreate(BaseModel):
+    department_name: str
+    location: str
+
+
+class DepartmentUpdate(BaseModel):
+    department_name: str
+    location: str
+
+
+class DepartmentResponse(BaseModel):
+    department_id: int
+    department_name: str
+    location: str

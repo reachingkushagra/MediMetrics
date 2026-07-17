@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from models import create_tables
 from db import get_connection
 from schemas import PatientCreate
+from schemas import DepartmentCreate, DepartmentUpdate
 
 app = FastAPI(
     title="MediMetrics API",
@@ -210,4 +211,31 @@ def delete_patient(patient_id: int):
     return {
         "message": "Patient deleted successfully",
         "patient_id": patient_id
+    }
+
+@app.post("/departments", status_code=201)
+def create_department(department: DepartmentCreate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO department (department_name, location)
+        VALUES (?, ?)
+        """,
+        (
+            department.department_name,
+            department.location,
+        ),
+    )
+
+    conn.commit()
+
+    department_id = cursor.lastrowid
+
+    conn.close()
+
+    return {
+        "message": "Department created successfully",
+        "department_id": department_id,
     }
