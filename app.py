@@ -64,3 +64,48 @@ def create_patient(patient: PatientCreate):
         "message": "Patient created successfully",
         "patient_id": patient_id
     }
+@app.get("/patients")
+def get_patients():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM patient
+        """
+    )
+
+    patients = cursor.fetchall()
+
+    conn.close()
+
+    return patients
+
+@app.get("/patients/{patient_id}")
+def get_patient(patient_id: int):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM patient
+        WHERE patient_id = ?
+        """,
+        (patient_id,)
+    )
+
+    patient = cursor.fetchone()
+
+    conn.close()
+
+    if patient is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    return patient
