@@ -109,3 +109,64 @@ def get_patient(patient_id: int):
         )
 
     return patient
+
+@app.put("/patients/{patient_id}")
+def update_patient(patient_id: int, patient: PatientCreate):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check if patient exists
+    cursor.execute(
+        """
+        SELECT *
+        FROM patient
+        WHERE patient_id = ?
+        """,
+        (patient_id,)
+    )
+
+    existing_patient = cursor.fetchone()
+
+    if existing_patient is None:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    # Update patient details
+    cursor.execute(
+        """
+        UPDATE patient
+        SET
+            first_name = ?,
+            last_name = ?,
+            gender = ?,
+            date_of_birth = ?,
+            phone = ?,
+            email = ?,
+            address = ?,
+            registration_date = ?
+        WHERE patient_id = ?
+        """,
+        (
+            patient.first_name,
+            patient.last_name,
+            patient.gender,
+            patient.date_of_birth,
+            patient.phone,
+            patient.email,
+            patient.address,
+            patient.registration_date,
+            patient_id
+        )
+    )
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "message": "Patient updated successfully",
+        "patient_id": patient_id
+    }
