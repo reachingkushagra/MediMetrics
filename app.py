@@ -388,3 +388,74 @@ def delete_doctor(doctor_id: int):
     conn.close()
 
     return {"message": "Doctor deleted successfully"}
+
+@app.put("/doctors/{doctor_id}")
+def update_doctor(doctor_id: int, doctor: DoctorUpdate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE doctor
+        SET
+            first_name = ?,
+            last_name = ?,
+            specialization = ?,
+            phone = ?,
+            email = ?,
+            department_id = ?
+        WHERE doctor_id = ?
+        """,
+        (
+            doctor.first_name,
+            doctor.last_name,
+            doctor.specialization,
+            doctor.phone,
+            doctor.email,
+            doctor.department_id,
+            doctor_id,
+        ),
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Doctor not found")
+
+    conn.close()
+
+    return {"message": "Doctor updated successfully"}
+
+
+@app.get("/doctors/{doctor_id}")
+def get_doctor(doctor_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM doctor WHERE doctor_id = ?",
+        (doctor_id,),
+    )
+
+    doctor = cursor.fetchone()
+
+    conn.close()
+
+    if doctor is None:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+
+    return doctor
+
+@app.get("/doctors")
+def get_doctors():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM doctor")
+
+    doctors = cursor.fetchall()
+
+    conn.close()
+
+    return doctors
