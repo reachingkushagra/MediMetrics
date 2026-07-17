@@ -4,6 +4,7 @@ from db import get_connection
 from schemas import PatientCreate
 from schemas import DepartmentCreate, DepartmentUpdate
 from schemas import DoctorCreate, DoctorUpdate
+from schemas import AppointmentCreate, AppointmentUpdate
 
 
 app = FastAPI(
@@ -459,3 +460,169 @@ def get_doctors():
     conn.close()
 
     return doctors
+
+
+@app.post("/appointments", status_code=201)
+def create_appointment(appointment: AppointmentCreate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO appointment
+        (
+            patient_id,
+            doctor_id,
+            status_id,
+            appointment_date,
+            appointment_time,
+            check_in_time,
+            consultation_end_time,
+            symptoms,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            appointment.patient_id,
+            appointment.doctor_id,
+            appointment.status_id,
+            appointment.appointment_date.isoformat(),
+            appointment.appointment_time.isoformat(),
+            appointment.check_in_time.isoformat() if appointment.check_in_time else None,
+            appointment.consultation_end_time.isoformat() if appointment.consultation_end_time else None,
+            appointment.symptoms,
+            appointment.notes,
+        )
+    )
+
+    conn.commit()
+    appointment_id = cursor.lastrowid
+    conn.close()
+
+    return {
+        "message": "Appointment created successfully",
+        "appointment_id": appointment_id
+    }
+
+@app.get("/appointments")
+def get_appointments():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            appointment_id,
+            patient_id,
+            doctor_id,
+            status_id,
+            appointment_date,
+            appointment_time,
+            check_in_time,
+            consultation_end_time,
+            symptoms,
+            notes
+        FROM appointment
+    """)
+
+    appointments = cursor.fetchall()
+    conn.close()
+
+    return appointments
+
+@app.get("/appointments/{appointment_id}")
+def get_appointment(appointment_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            appointment_id,
+            patient_id,
+            doctor_id,
+            status_id,
+            appointment_date,
+            appointment_time,
+            check_in_time,
+            consultation_end_time,
+            symptoms,
+            notes
+        FROM appointment
+        WHERE appointment_id = ?
+        """,
+        (appointment_id,)
+    )
+
+    appointment = cursor.fetchone()
+    conn.close()
+
+    if appointment is None:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    return appointment
+
+@app.put("/appointments/{appointment_id}")
+def update_appointment(appointment_id: int, appointment: AppointmentUpdate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE appointment
+        SET
+            patient_id = ?,
+            doctor_id = ?,
+            status_id = ?,
+            appointment_date = ?,
+            appointment_time = ?,
+            check_in_time = ?,
+            consultation_end_time = ?,
+            symptoms = ?,
+            notes = ?
+        WHERE appointment_id = ?
+        """,
+        (
+            appointment.patient_id,
+            appointment.doctor_id,
+            appointment.status_id,
+            appointment.appointment_date.isoformat(),
+            appointment.appointment_time.isoformat(),
+            appointment.check_in_time.isoformat() if appointment.check_in_time else None,
+            appointment.consultation_end_time.isoformat() if appointment.consultation_end_time else None,
+            appointment.symptoms,
+            appointment.notes,
+            appointment_id,
+        )
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    conn.close()
+
+    return {"message": "Appointment updated successfully"}
+
+
+@app.delete("/appointments/{appointment_id}")
+def delete_appointment(appointment_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM appointment WHERE appointment_id = ?",
+        (appointment_id,)
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    conn.close()
+
+    return {"message": "Appointment deleted successfully"}

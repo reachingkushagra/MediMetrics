@@ -78,3 +78,28 @@ class DoctorResponse(BaseModel):
     phone: str
     email: EmailStr
     department_id: int
+
+from datetime import date, time
+
+class AppointmentCreate(BaseModel):
+    patient_id: int
+    doctor_id: int
+    status_id: int
+    appointment_date: date
+    appointment_time: time
+    check_in_time: time | None = None
+    consultation_end_time: time | None = None
+    symptoms: str
+    notes: str
+
+
+class AppointmentUpdate(BaseModel):
+    patient_id: int
+    doctor_id: int
+    status_id: int
+    appointment_date: date
+    appointment_time: time
+    check_in_time: time | None = None
+    consultation_end_time: time | None = None
+    symptoms: str
+    notes: str
