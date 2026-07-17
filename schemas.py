@@ -50,3 +50,31 @@ class DepartmentResponse(BaseModel):
     department_id: int
     department_name: str
     location: str
+
+
+class DoctorCreate(BaseModel):
+    first_name: str
+    last_name : str
+    specialization: str
+    phone: str
+    email: EmailStr
+    department_id: int
+
+
+class DoctorUpdate(BaseModel):
+    first_name: str
+    last_name: str
+    specialization: str
+    phone: str
+    email: EmailStr
+    department_id: int
+
+
+class DoctorResponse(BaseModel):
+    doctor_id: int
+    first_name: str
+    last_name: str
+    specialization: str
+    phone: str
+    email: EmailStr
+    department_id: int

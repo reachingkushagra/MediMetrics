@@ -3,6 +3,8 @@ from models import create_tables
 from db import get_connection
 from schemas import PatientCreate
 from schemas import DepartmentCreate, DepartmentUpdate
+from schemas import DoctorCreate, DoctorUpdate
+
 
 app = FastAPI(
     title="MediMetrics API",
@@ -325,3 +327,64 @@ def delete_department(department_id: int):
     conn.close()
 
     return {"message": "Department deleted successfully"}
+
+
+@app.post("/doctors", status_code=201)
+def create_doctor(doctor: DoctorCreate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO doctor
+        (
+            first_name,
+            last_name,
+            specialization,
+            phone,
+            email,
+            department_id
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            doctor.first_name,
+            doctor.last_name,
+            doctor.specialization,
+            doctor.phone,
+            doctor.email,
+            doctor.department_id,
+        ),
+    )
+
+    conn.commit()
+
+    doctor_id = cursor.lastrowid
+
+    conn.close()
+
+    return {
+        "message": "Doctor created successfully",
+        "doctor_id": doctor_id
+    }
+
+
+@app.delete("/doctors/{doctor_id}")
+def delete_doctor(doctor_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM doctor WHERE doctor_id = ?",
+        (doctor_id,),
+    )
+
+    conn.commit()
+
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Doctor not found")
+
+    conn.close()
+
+    return {"message": "Doctor deleted successfully"}
