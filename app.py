@@ -239,3 +239,35 @@ def create_department(department: DepartmentCreate):
         "message": "Department created successfully",
         "department_id": department_id,
     }
+
+@app.get("/departments")
+def get_departments():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM department")
+
+    departments = cursor.fetchall()
+
+    conn.close()
+
+    return departments
+
+@app.get("/departments/{department_id}")
+def get_department(department_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM department WHERE department_id = ?",
+        (department_id,),
+    )
+
+    department = cursor.fetchone()
+
+    conn.close()
+
+    if department is None:
+        raise HTTPException(status_code=404, detail="Department not found")
+
+    return department
