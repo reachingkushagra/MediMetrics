@@ -6,14 +6,14 @@ from schemas import DepartmentCreate, DepartmentUpdate
 from schemas import DoctorCreate, DoctorUpdate
 from schemas import AppointmentCreate, AppointmentUpdate
 import pandas as pd
-
+from analytics import router as analytics_router
 
 app = FastAPI(
     title="MediMetrics API",
     description="Smart Patient Appointment & Wait Time Analytics API",
     version="1.0.0"
 )
-
+app.include_router(analytics_router)
 
 @app.on_event("startup")
 def startup():
@@ -628,82 +628,3 @@ def delete_appointment(appointment_id: int):
 
     return {"message": "Appointment deleted successfully"}
 
-@app.get("/analytics/average-wait-time")
-def average_wait_time():
-
-    conn = get_connection()
-
-    query = """
-    SELECT appointment_time, check_in_time
-    FROM appointment
-    WHERE check_in_time IS NOT NULL
-    """
-
-    df = pd.read_sql_query(query, conn)
-
-    conn.close()
-
-    if df.empty:
-        return {"average_wait_time_minutes": 0}
-
-    df["appointment_time"] = pd.to_datetime(df["appointment_time"])
-    df["check_in_time"] = pd.to_datetime(df["check_in_time"])
-
-    df["wait_time"] = (
-        df["check_in_time"] - df["appointment_time"]
-    ).dt.total_seconds() / 60
-
-    return {
-        "average_wait_time_minutes": round(df["wait_time"].mean(), 2)
-    }
-
-@app.get("/analytics/average-consultation-time")
-def average_consultation_time():
-
-    conn = get_connection()
-
-    query = """
-    SELECT check_in_time, consultation_end_time
-    FROM appointment
-    WHERE check_in_time IS NOT NULL
-    AND consultation_end_time IS NOT NULL
-    """
-
-    df = pd.read_sql_query(query, conn)
-
-    conn.close()
-
-    if df.empty:
-        return {"average_consultation_minutes": 0}
-
-    df["check_in_time"] = pd.to_datetime(df["check_in_time"])
-    df["consultation_end_time"] = pd.to_datetime(df["consultation_end_time"])
-
-    df["consultation_time"] = (
-        df["consultation_end_time"] - df["check_in_time"]
-    ).dt.total_seconds() / 60
-
-    return {
-        "average_consultation_minutes": round(df["consultation_time"].mean(), 2)
-    }
-
-@app.get("/analytics/doctor-workload")
-def doctor_workload():
-
-    conn = get_connection()
-
-    query = """
-    SELECT
-        d.first_name || ' ' || d.last_name AS doctor,
-        COUNT(a.appointment_id) AS total_appointments
-    FROM doctor d
-    LEFT JOIN appointment a
-    ON d.doctor_id = a.doctor_id
-    GROUP BY d.doctor_id
-    """
-
-    df = pd.read_sql_query(query, conn)
-
-    conn.close()
-
-    return df.to_dict(orient="records")
