@@ -686,3 +686,24 @@ def average_consultation_time():
     return {
         "average_consultation_minutes": round(df["consultation_time"].mean(), 2)
     }
+
+@app.get("/analytics/doctor-workload")
+def doctor_workload():
+
+    conn = get_connection()
+
+    query = """
+    SELECT
+        d.first_name || ' ' || d.last_name AS doctor,
+        COUNT(a.appointment_id) AS total_appointments
+    FROM doctor d
+    LEFT JOIN appointment a
+    ON d.doctor_id = a.doctor_id
+    GROUP BY d.doctor_id
+    """
+
+    df = pd.read_sql_query(query, conn)
+
+    conn.close()
+
+    return df.to_dict(orient="records")
