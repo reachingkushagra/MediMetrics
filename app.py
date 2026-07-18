@@ -1,3 +1,5 @@
+"""Main FastAPI application for the MediMetrics Hospital Management System."""
+
 from fastapi import FastAPI, HTTPException
 from models import create_tables
 from db import get_connection
@@ -5,30 +7,34 @@ from schemas import PatientCreate
 from schemas import DepartmentCreate, DepartmentUpdate
 from schemas import DoctorCreate, DoctorUpdate
 from schemas import AppointmentCreate, AppointmentUpdate
-import pandas as pd
 from analytics import router as analytics_router
 
 app = FastAPI(
     title="MediMetrics API",
     description="Smart Patient Appointment & Wait Time Analytics API",
-    version="1.0.0"
+    version="1.0.0",
 )
 app.include_router(analytics_router)
 
+
 @app.on_event("startup")
 def startup():
+    """This function creates all the database tables when the application starts."""
     create_tables()
 
 
 @app.get("/")
 def home():
+    """Display a welcome message for the MediMetrics API."""
     return {
         "message": "Welcome to MediMetrics API",
-        "status": "API is running successfully!"
+        "status": "API is running successfully!",
     }
+
 
 @app.post("/patients", status_code=201)
 def create_patient(patient: PatientCreate):
+    """Add a new patient to the hospital database."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -65,22 +71,19 @@ def create_patient(patient: PatientCreate):
 
     conn.close()
 
-    return {
-        "message": "Patient created successfully",
-        "patient_id": patient_id
-    }
+    return {"message": "Patient created successfully", "patient_id": patient_id}
+
+
 @app.get("/patients")
 def get_patients():
-
+    """Get the details of all registered patients."""
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        """
+    cursor.execute("""
         SELECT *
         FROM patient
-        """
-    )
+        """)
 
     patients = cursor.fetchall()
 
@@ -88,9 +91,10 @@ def get_patients():
 
     return patients
 
+
 @app.get("/patients/{patient_id}")
 def get_patient(patient_id: int):
-
+    """Get the details of a patient using the patient ID."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -100,7 +104,7 @@ def get_patient(patient_id: int):
         FROM patient
         WHERE patient_id = ?
         """,
-        (patient_id,)
+        (patient_id,),
     )
 
     patient = cursor.fetchone()
@@ -108,16 +112,14 @@ def get_patient(patient_id: int):
     conn.close()
 
     if patient is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Patient not found"
-        )
+        raise HTTPException(status_code=404, detail="Patient not found")
 
     return patient
 
+
 @app.put("/patients/{patient_id}")
 def update_patient(patient_id: int, patient: PatientCreate):
-
+    """Update the information of an existing patient."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -128,17 +130,14 @@ def update_patient(patient_id: int, patient: PatientCreate):
         FROM patient
         WHERE patient_id = ?
         """,
-        (patient_id,)
+        (patient_id,),
     )
 
     existing_patient = cursor.fetchone()
 
     if existing_patient is None:
         conn.close()
-        raise HTTPException(
-            status_code=404,
-            detail="Patient not found"
-        )
+        raise HTTPException(status_code=404, detail="Patient not found")
 
     # Update patient details
     cursor.execute(
@@ -164,20 +163,19 @@ def update_patient(patient_id: int, patient: PatientCreate):
             patient.email,
             patient.address,
             patient.registration_date,
-            patient_id
-        )
+            patient_id,
+        ),
     )
 
     conn.commit()
     conn.close()
 
-    return {
-        "message": "Patient updated successfully",
-        "patient_id": patient_id
-    }
+    return {"message": "Patient updated successfully", "patient_id": patient_id}
+
+
 @app.delete("/patients/{patient_id}")
 def delete_patient(patient_id: int):
-
+    """Delete a patient from the hospital database."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -188,17 +186,14 @@ def delete_patient(patient_id: int):
         FROM patient
         WHERE patient_id = ?
         """,
-        (patient_id,)
+        (patient_id,),
     )
 
     patient = cursor.fetchone()
 
     if patient is None:
         conn.close()
-        raise HTTPException(
-            status_code=404,
-            detail="Patient not found"
-        )
+        raise HTTPException(status_code=404, detail="Patient not found")
 
     # Delete the patient
     cursor.execute(
@@ -206,19 +201,18 @@ def delete_patient(patient_id: int):
         DELETE FROM patient
         WHERE patient_id = ?
         """,
-        (patient_id,)
+        (patient_id,),
     )
 
     conn.commit()
     conn.close()
 
-    return {
-        "message": "Patient deleted successfully",
-        "patient_id": patient_id
-    }
+    return {"message": "Patient deleted successfully", "patient_id": patient_id}
+
 
 @app.post("/departments", status_code=201)
 def create_department(department: DepartmentCreate):
+    """Create a new department in the hospital."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -244,8 +238,10 @@ def create_department(department: DepartmentCreate):
         "department_id": department_id,
     }
 
+
 @app.get("/departments")
 def get_departments():
+    """Get the details of all departments."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -257,8 +253,10 @@ def get_departments():
 
     return departments
 
+
 @app.get("/departments/{department_id}")
 def get_department(department_id: int):
+    """Get the details of a department using the department ID."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -276,11 +274,13 @@ def get_department(department_id: int):
 
     return department
 
+
 @app.put("/departments/{department_id}")
 def update_department(
     department_id: int,
     department: DepartmentUpdate,
 ):
+    """Update the details of a department."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -312,6 +312,7 @@ def update_department(
 
 @app.delete("/departments/{department_id}")
 def delete_department(department_id: int):
+    """Cancel or delete an appointment."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -333,6 +334,7 @@ def delete_department(department_id: int):
 
 @app.post("/doctors", status_code=201)
 def create_doctor(doctor: DoctorCreate):
+    """Add a new doctor to the hospital."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -365,14 +367,12 @@ def create_doctor(doctor: DoctorCreate):
 
     conn.close()
 
-    return {
-        "message": "Doctor created successfully",
-        "doctor_id": doctor_id
-    }
+    return {"message": "Doctor created successfully", "doctor_id": doctor_id}
 
 
 @app.delete("/doctors/{doctor_id}")
 def delete_doctor(doctor_id: int):
+    """Delete a doctor from the hospital database."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -391,8 +391,10 @@ def delete_doctor(doctor_id: int):
 
     return {"message": "Doctor deleted successfully"}
 
+
 @app.put("/doctors/{doctor_id}")
 def update_doctor(doctor_id: int, doctor: DoctorUpdate):
+    """Update the details of a doctor."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -432,6 +434,7 @@ def update_doctor(doctor_id: int, doctor: DoctorUpdate):
 
 @app.get("/doctors/{doctor_id}")
 def get_doctor(doctor_id: int):
+    """Get the details of a doctor using the doctor ID."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -449,8 +452,10 @@ def get_doctor(doctor_id: int):
 
     return doctor
 
+
 @app.get("/doctors")
 def get_doctors():
+    """Get the details of all doctors in the hospital."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -465,6 +470,7 @@ def get_doctors():
 
 @app.post("/appointments", status_code=201)
 def create_appointment(appointment: AppointmentCreate):
+    """Book a new appointment for a patient."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -490,11 +496,19 @@ def create_appointment(appointment: AppointmentCreate):
             appointment.status_id,
             appointment.appointment_date.isoformat(),
             appointment.appointment_time.isoformat(),
-            appointment.check_in_time.isoformat() if appointment.check_in_time else None,
-            appointment.consultation_end_time.isoformat() if appointment.consultation_end_time else None,
+            (
+                appointment.check_in_time.isoformat()
+                if appointment.check_in_time
+                else None
+            ),
+            (
+                appointment.consultation_end_time.isoformat()
+                if appointment.consultation_end_time
+                else None
+            ),
             appointment.symptoms,
             appointment.notes,
-        )
+        ),
     )
 
     conn.commit()
@@ -503,11 +517,13 @@ def create_appointment(appointment: AppointmentCreate):
 
     return {
         "message": "Appointment created successfully",
-        "appointment_id": appointment_id
+        "appointment_id": appointment_id,
     }
+
 
 @app.get("/appointments")
 def get_appointments():
+    """Get the details of all appointments."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -531,8 +547,10 @@ def get_appointments():
 
     return appointments
 
+
 @app.get("/appointments/{appointment_id}")
 def get_appointment(appointment_id: int):
+    """Get the details of an appointment using the appointment ID."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -552,7 +570,7 @@ def get_appointment(appointment_id: int):
         FROM appointment
         WHERE appointment_id = ?
         """,
-        (appointment_id,)
+        (appointment_id,),
     )
 
     appointment = cursor.fetchone()
@@ -563,8 +581,10 @@ def get_appointment(appointment_id: int):
 
     return appointment
 
+
 @app.put("/appointments/{appointment_id}")
 def update_appointment(appointment_id: int, appointment: AppointmentUpdate):
+    """Update the details of an existing appointment."""
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -589,12 +609,20 @@ def update_appointment(appointment_id: int, appointment: AppointmentUpdate):
             appointment.status_id,
             appointment.appointment_date.isoformat(),
             appointment.appointment_time.isoformat(),
-            appointment.check_in_time.isoformat() if appointment.check_in_time else None,
-            appointment.consultation_end_time.isoformat() if appointment.consultation_end_time else None,
+            (
+                appointment.check_in_time.isoformat()
+                if appointment.check_in_time
+                else None
+            ),
+            (
+                appointment.consultation_end_time.isoformat()
+                if appointment.consultation_end_time
+                else None
+            ),
             appointment.symptoms,
             appointment.notes,
             appointment_id,
-        )
+        ),
     )
 
     conn.commit()
@@ -610,12 +638,12 @@ def update_appointment(appointment_id: int, appointment: AppointmentUpdate):
 
 @app.delete("/appointments/{appointment_id}")
 def delete_appointment(appointment_id: int):
+    """Cancel or delete an appointment."""
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
-        "DELETE FROM appointment WHERE appointment_id = ?",
-        (appointment_id,)
+        "DELETE FROM appointment WHERE appointment_id = ?", (appointment_id,)
     )
 
     conn.commit()
@@ -627,4 +655,3 @@ def delete_appointment(appointment_id: int):
     conn.close()
 
     return {"message": "Appointment deleted successfully"}
-

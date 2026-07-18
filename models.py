@@ -1,11 +1,12 @@
+"""This file creates all the required database tables for the project."""
 from db import get_connection
 
 
 def create_tables():
+    """Create the database tables if they do not already exist."""
     conn = get_connection()
     cursor = conn.cursor()
 
-    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS department (
         department_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,7 +15,6 @@ def create_tables():
     )
     """)
 
-    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS doctor (
         doctor_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +29,6 @@ def create_tables():
     )
     """)
 
-   
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS patient (
         patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +43,6 @@ def create_tables():
     )
     """)
 
-    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS appointment_status (
         status_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +50,6 @@ def create_tables():
     )
     """)
 
-    
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS appointment (
         appointment_id INTEGER PRIMARY KEY AUTOINCREMENT,

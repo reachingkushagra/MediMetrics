@@ -1,5 +1,8 @@
+"""This file is responsible for connecting the application to the database."""
+
 import os
 import sqlite3
+import mysql.connector
 from dotenv import load_dotenv
 
 load_dotenv(".env.development")
@@ -8,14 +11,13 @@ DB_TYPE = os.getenv("DB_TYPE")
 
 
 def get_connection():
-
+    """Create and return a connection to the selected database."""
     if DB_TYPE == "sqlite":
         conn = sqlite3.connect(os.getenv("DB_PATH"))
         conn.row_factory = sqlite3.Row
         return conn
 
-    elif DB_TYPE == "mysql":
-        import mysql.connector
+    if DB_TYPE == "mysql":
 
         conn = mysql.connector.connect(
             host=os.getenv("DB_HOST"),
@@ -25,5 +27,4 @@ def get_connection():
         )
         return conn
 
-    else:
-        raise Exception("Invalid database type.")
+    raise ValueError("Invalid database type.")

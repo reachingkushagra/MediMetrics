@@ -1,32 +1,24 @@
+"""This file contains analytics APIs for the MediMetrics dashboard."""
+
+import pandas as pd
 from fastapi import APIRouter
 from db import get_connection
-import pandas as pd
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
+
+
 @router.get("/dashboard")
 def dashboard():
-
+    """Return the overall dashboard statistics."""
     conn = get_connection()
 
-    patients = pd.read_sql_query(
-        "SELECT COUNT(*) AS total FROM patient",
-        conn
-    )
+    patients = pd.read_sql_query("SELECT COUNT(*) AS total FROM patient", conn)
 
-    doctors = pd.read_sql_query(
-        "SELECT COUNT(*) AS total FROM doctor",
-        conn
-    )
+    doctors = pd.read_sql_query("SELECT COUNT(*) AS total FROM doctor", conn)
 
-    departments = pd.read_sql_query(
-        "SELECT COUNT(*) AS total FROM department",
-        conn
-    )
+    departments = pd.read_sql_query("SELECT COUNT(*) AS total FROM department", conn)
 
-    appointments = pd.read_sql_query(
-        "SELECT COUNT(*) AS total FROM appointment",
-        conn
-    )
+    appointments = pd.read_sql_query("SELECT COUNT(*) AS total FROM appointment", conn)
 
     conn.close()
 
@@ -34,12 +26,13 @@ def dashboard():
         "total_patients": int(patients.iloc[0]["total"]),
         "total_doctors": int(doctors.iloc[0]["total"]),
         "total_departments": int(departments.iloc[0]["total"]),
-        "total_appointments": int(appointments.iloc[0]["total"])
+        "total_appointments": int(appointments.iloc[0]["total"]),
     }
+
 
 @router.get("/average-wait-time")
 def average_wait_time():
-
+    """Calculate the average waiting time of patients."""
     conn = get_connection()
 
     df = pd.read_sql_query(
@@ -63,13 +56,12 @@ def average_wait_time():
         df["check_in_time"] - df["appointment_time"]
     ).dt.total_seconds() / 60
 
-    return {
-        "average_wait_time_minutes": round(df["wait_time"].mean(), 2)
-    }
+    return {"average_wait_time_minutes": round(df["wait_time"].mean(), 2)}
+
 
 @router.get("/average-consultation-time")
 def average_consultation_time():
-
+    """Calculate the average consultation time of doctors."""
     conn = get_connection()
 
     df = pd.read_sql_query(
@@ -94,13 +86,12 @@ def average_consultation_time():
         df["consultation_end_time"] - df["check_in_time"]
     ).dt.total_seconds() / 60
 
-    return {
-        "average_consultation_minutes": round(df["consultation_time"].mean(), 2)
-    }
+    return {"average_consultation_minutes": round(df["consultation_time"].mean(), 2)}
+
 
 @router.get("/doctor-workload")
 def doctor_workload():
-
+    """Show the number of appointments handled by each doctor."""
     conn = get_connection()
 
     df = pd.read_sql_query(
@@ -120,9 +111,10 @@ def doctor_workload():
 
     return df.to_dict(orient="records")
 
+
 @router.get("/department-appointments")
 def department_appointments():
-
+    """Show the total appointments for each department."""
     conn = get_connection()
 
     df = pd.read_sql_query(
@@ -144,9 +136,10 @@ def department_appointments():
 
     return df.to_dict(orient="records")
 
+
 @router.get("/peak-hours")
 def peak_hours():
-
+    """Find the busiest appointment hours in the hospital."""
     conn = get_connection()
 
     df = pd.read_sql_query(
@@ -162,17 +155,14 @@ def peak_hours():
     df["appointment_time"] = pd.to_datetime(df["appointment_time"])
     df["hour"] = df["appointment_time"].dt.hour
 
-    result = (
-        df.groupby("hour")
-        .size()
-        .reset_index(name="appointments")
-    )
+    result = df.groupby("hour").size().reset_index(name="appointments")
 
     return result.to_dict(orient="records")
 
+
 @router.get("/appointment-status")
 def appointment_status():
-
+    """Show the number of scheduled, completed, cancelled, and no-show appointments."""
     conn = get_connection()
 
     df = pd.read_sql_query(
