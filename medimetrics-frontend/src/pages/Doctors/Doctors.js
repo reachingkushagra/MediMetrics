@@ -92,11 +92,13 @@ const Doctors = () => {
     }
   };
 
+  const departmentMap = Object.fromEntries(departments.map((department) => [department.department_id, department.department_name]));
+
   const columns = [
     { header: 'Doctor ID', key: 'doctor_id' },
     { header: 'Doctor Name', key: 'first_name', render: (row) => `${row.first_name} ${row.last_name}` },
     { header: 'Specialization', key: 'specialization' },
-    { header: 'Department', key: 'department_id' },
+    { header: 'Department', key: 'department_id', render: (row) => departmentMap[row.department_id] || row.department_id },
     { header: 'Phone', key: 'phone' },
     { header: 'Email', key: 'email' },
     {
@@ -122,11 +124,15 @@ const Doctors = () => {
 
       <Modal open={modalOpen} title={editingDoctor ? 'Edit Doctor' : 'Add Doctor'} onClose={() => setModalOpen(false)}>
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px' }}>
-          <input value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} placeholder="First Name" required style={fieldStyle} />
-          <input value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} placeholder="Last Name" required style={fieldStyle} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <input value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} placeholder="First Name" required style={fieldStyle} />
+            <input value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} placeholder="Last Name" required style={fieldStyle} />
+          </div>
           <input value={form.specialization} onChange={(e) => setForm({ ...form, specialization: e.target.value })} placeholder="Specialization" required style={fieldStyle} />
-          <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="Phone" required style={fieldStyle} />
-          <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" required style={fieldStyle} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="Phone" required style={fieldStyle} />
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" required style={fieldStyle} />
+          </div>
           <select value={form.department_id} onChange={(e) => setForm({ ...form, department_id: e.target.value })} required style={fieldStyle}>
             <option value="">Select Department</option>
             {departments.map((department) => (

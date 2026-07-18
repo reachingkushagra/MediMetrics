@@ -1,6 +1,7 @@
 """Main FastAPI application for the MediMetrics Hospital Management System."""
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from models import create_tables
 from db import get_connection
 from schemas import PatientCreate
@@ -14,6 +15,15 @@ app = FastAPI(
     description="Smart Patient Appointment & Wait Time Analytics API",
     version="1.0.0",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(analytics_router)
 
 

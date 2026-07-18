@@ -51,6 +51,11 @@ const Dashboard = () => {
 
   return (
     <div>
+      <div style={{ background: '#fff', borderRadius: '20px', padding: '24px', border: '1px solid #E2E8F0', marginBottom: '20px', boxShadow: '0 8px 24px rgba(15,23,42,0.04)' }}>
+        <h2 style={{ margin: '0 0 8px', color: '#0F172A' }}>Welcome to MediMetrics</h2>
+        <p style={{ margin: 0, color: '#64748B' }}>A live overview of appointments, care team performance, and hospital operations.</p>
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         <DashboardCard title="Total Patients" value={stats?.total_patients ?? 0} subtitle="Registered patients" accent="#2563EB" />
         <DashboardCard title="Total Doctors" value={stats?.total_doctors ?? 0} subtitle="Active medical staff" accent="#14B8A6" />
@@ -65,7 +70,7 @@ const Dashboard = () => {
       </div>
 
       <div style={{ display: 'grid', gap: '16px' }}>
-        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', border: '1px solid #E2E8F0' }}>
+        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', border: '1px solid #E2E8F0', boxShadow: '0 6px 24px rgba(15,23,42,0.05)' }}>
           <h3 style={{ marginTop: 0 }}>Doctor Workload</h3>
           {doctorWorkload.length === 0 ? <div>No records found</div> : (
             <div style={{ display: 'grid', gap: '10px' }}>
@@ -79,7 +84,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', border: '1px solid #E2E8F0' }}>
+        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', border: '1px solid #E2E8F0', boxShadow: '0 6px 24px rgba(15,23,42,0.05)' }}>
           <h3 style={{ marginTop: 0 }}>Department Appointments</h3>
           {departmentAppointments.length === 0 ? <div>No records found</div> : (
             <div style={{ display: 'grid', gap: '10px' }}>
@@ -93,7 +98,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', border: '1px solid #E2E8F0' }}>
+        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', border: '1px solid #E2E8F0', boxShadow: '0 6px 24px rgba(15,23,42,0.05)' }}>
           <h3 style={{ marginTop: 0 }}>Appointment Status</h3>
           {statusData.length === 0 ? <div>No records found</div> : (
             <div style={{ display: 'grid', gap: '10px' }}>

@@ -149,30 +149,38 @@ const Appointments = () => {
 
       <Modal open={modalOpen} title={editingAppointment ? 'Edit Appointment' : 'Add Appointment'} onClose={() => setModalOpen(false)}>
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px' }}>
-          <select value={form.patient_id} onChange={(e) => setForm({ ...form, patient_id: e.target.value })} required style={fieldStyle}>
-            <option value="">Select Patient</option>
-            {patients.map((patient) => (
-              <option key={patient.patient_id} value={patient.patient_id}>{`${patient.first_name} ${patient.last_name}`}</option>
-            ))}
-          </select>
-          <select value={form.doctor_id} onChange={(e) => setForm({ ...form, doctor_id: e.target.value })} required style={fieldStyle}>
-            <option value="">Select Doctor</option>
-            {doctors.map((doctor) => (
-              <option key={doctor.doctor_id} value={doctor.doctor_id}>{`${doctor.first_name} ${doctor.last_name}`}</option>
-            ))}
-          </select>
-          <select value={form.status_id} onChange={(e) => setForm({ ...form, status_id: e.target.value })} required style={fieldStyle}>
-            <option value="">Select Status</option>
-            <option value="1">Scheduled</option>
-            <option value="2">Completed</option>
-            <option value="3">Cancelled</option>
-            <option value="4">No-show</option>
-          </select>
-          <input type="date" value={form.appointment_date} onChange={(e) => setForm({ ...form, appointment_date: e.target.value })} required style={fieldStyle} />
-          <input type="time" value={form.appointment_time} onChange={(e) => setForm({ ...form, appointment_time: e.target.value })} required style={fieldStyle} />
-          <input type="time" value={form.check_in_time} onChange={(e) => setForm({ ...form, check_in_time: e.target.value })} style={fieldStyle} />
-          <input type="time" value={form.consultation_end_time} onChange={(e) => setForm({ ...form, consultation_end_time: e.target.value })} style={fieldStyle} />
-          <input value={form.symptoms} onChange={(e) => setForm({ ...form, symptoms: e.target.value })} placeholder="Symptoms" required style={fieldStyle} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <select value={form.patient_id} onChange={(e) => setForm({ ...form, patient_id: e.target.value })} required style={fieldStyle}>
+              <option value="">Select Patient</option>
+              {patients.map((patient) => (
+                <option key={patient.patient_id} value={patient.patient_id}>{`${patient.first_name} ${patient.last_name}`}</option>
+              ))}
+            </select>
+            <select value={form.doctor_id} onChange={(e) => setForm({ ...form, doctor_id: e.target.value })} required style={fieldStyle}>
+              <option value="">Select Doctor</option>
+              {doctors.map((doctor) => (
+                <option key={doctor.doctor_id} value={doctor.doctor_id}>{`${doctor.first_name} ${doctor.last_name}`}</option>
+              ))}
+            </select>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <select value={form.status_id} onChange={(e) => setForm({ ...form, status_id: e.target.value })} required style={fieldStyle}>
+              <option value="">Select Status</option>
+              <option value="1">Scheduled</option>
+              <option value="2">Completed</option>
+              <option value="3">Cancelled</option>
+              <option value="4">No-show</option>
+            </select>
+            <input type="date" value={form.appointment_date} onChange={(e) => setForm({ ...form, appointment_date: e.target.value })} required style={fieldStyle} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <input type="time" value={form.appointment_time} onChange={(e) => setForm({ ...form, appointment_time: e.target.value })} required style={fieldStyle} />
+            <input type="time" value={form.check_in_time} onChange={(e) => setForm({ ...form, check_in_time: e.target.value })} style={fieldStyle} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <input type="time" value={form.consultation_end_time} onChange={(e) => setForm({ ...form, consultation_end_time: e.target.value })} style={fieldStyle} />
+            <input value={form.symptoms} onChange={(e) => setForm({ ...form, symptoms: e.target.value })} placeholder="Symptoms" required style={fieldStyle} />
+          </div>
           <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Notes" style={{ ...fieldStyle, minHeight: '90px' }} />
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
             <Button variant="outline" onClick={() => setModalOpen(false)}>Cancel</Button>

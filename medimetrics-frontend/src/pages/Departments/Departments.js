@@ -105,8 +105,10 @@ const Departments = () => {
 
       <Modal open={modalOpen} title={editingDepartment ? 'Edit Department' : 'Add Department'} onClose={() => setModalOpen(false)}>
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px' }}>
-          <input value={form.department_name} onChange={(e) => setForm({ ...form, department_name: e.target.value })} placeholder="Department Name" required style={fieldStyle} />
-          <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Location" required style={fieldStyle} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+            <input value={form.department_name} onChange={(e) => setForm({ ...form, department_name: e.target.value })} placeholder="Department Name" required style={fieldStyle} />
+            <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Location" required style={fieldStyle} />
+          </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
             <Button variant="outline" onClick={() => setModalOpen(false)}>Cancel</Button>
             <Button type="submit">Save</Button>
