@@ -95,7 +95,7 @@ def get_patients() -> list:
         FROM patient
         """)
 
-    patients = cursor.fetchall()
+    patients = [dict(row) for row in cursor.fetchall()]
 
     conn.close()
 
@@ -124,7 +124,7 @@ def get_patient(patient_id: int) -> dict:
     if patient is None:
         raise HTTPException(status_code=404, detail="Patient not found")
 
-    return patient
+    return dict(patient)
 
 
 @app.put("/patients/{patient_id}")
@@ -257,9 +257,7 @@ def get_departments() -> list:
 
     cursor.execute("SELECT * FROM department")
 
-    departments = cursor.fetchall()
-
-    conn.close()
+    departments = [dict(row) for row in cursor.fetchall()]
 
     return departments
 
@@ -282,7 +280,7 @@ def get_department(department_id: int) -> dict:
     if department is None:
         raise HTTPException(status_code=404, detail="Department not found")
 
-    return department
+    return dict(department)
 
 
 @app.put("/departments/{department_id}")
@@ -460,7 +458,7 @@ def get_doctor(doctor_id: int) -> dict:
     if doctor is None:
         raise HTTPException(status_code=404, detail="Doctor not found")
 
-    return doctor
+    return dict(doctor)
 
 
 @app.get("/doctors")
@@ -471,7 +469,7 @@ def get_doctors() -> list:
 
     cursor.execute("SELECT * FROM doctor")
 
-    doctors = cursor.fetchall()
+    doctors = [dict(row) for row in cursor.fetchall()]
 
     conn.close()
 
@@ -552,7 +550,7 @@ def get_appointments() -> list:
         FROM appointment
     """)
 
-    appointments = cursor.fetchall()
+    appointments = [dict(row) for row in cursor.fetchall()]
     conn.close()
 
     return appointments
@@ -589,7 +587,7 @@ def get_appointment(appointment_id: int) -> dict:
     if appointment is None:
         raise HTTPException(status_code=404, detail="Appointment not found")
 
-    return appointment
+    return dict(appointment)
 
 
 @app.put("/appointments/{appointment_id}")
