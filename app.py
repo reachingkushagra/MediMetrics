@@ -28,13 +28,13 @@ app.include_router(analytics_router)
 
 
 @app.on_event("startup")
-def startup():
+def startup() -> None:
     """This function creates all the database tables when the application starts."""
     create_tables()
 
 
 @app.get("/")
-def home():
+def home() -> dict:
     """Display a welcome message for the MediMetrics API."""
     return {
         "message": "Welcome to MediMetrics API",
@@ -43,7 +43,7 @@ def home():
 
 
 @app.post("/patients", status_code=201)
-def create_patient(patient: PatientCreate):
+def create_patient(patient: PatientCreate) -> dict:
     """Add a new patient to the hospital database."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -85,7 +85,7 @@ def create_patient(patient: PatientCreate):
 
 
 @app.get("/patients")
-def get_patients():
+def get_patients() -> list:
     """Get the details of all registered patients."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -103,7 +103,7 @@ def get_patients():
 
 
 @app.get("/patients/{patient_id}")
-def get_patient(patient_id: int):
+def get_patient(patient_id: int) -> dict:
     """Get the details of a patient using the patient ID."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -128,7 +128,7 @@ def get_patient(patient_id: int):
 
 
 @app.put("/patients/{patient_id}")
-def update_patient(patient_id: int, patient: PatientCreate):
+def update_patient(patient_id: int, patient: PatientCreate) -> dict:
     """Update the information of an existing patient."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -184,7 +184,7 @@ def update_patient(patient_id: int, patient: PatientCreate):
 
 
 @app.delete("/patients/{patient_id}")
-def delete_patient(patient_id: int):
+def delete_patient(patient_id: int) -> dict:
     """Delete a patient from the hospital database."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -221,7 +221,7 @@ def delete_patient(patient_id: int):
 
 
 @app.post("/departments", status_code=201)
-def create_department(department: DepartmentCreate):
+def create_department(department: DepartmentCreate) -> dict:
     """Create a new department in the hospital."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -250,7 +250,7 @@ def create_department(department: DepartmentCreate):
 
 
 @app.get("/departments")
-def get_departments():
+def get_departments() -> list:
     """Get the details of all departments."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -265,7 +265,7 @@ def get_departments():
 
 
 @app.get("/departments/{department_id}")
-def get_department(department_id: int):
+def get_department(department_id: int) -> dict:
     """Get the details of a department using the department ID."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -289,7 +289,7 @@ def get_department(department_id: int):
 def update_department(
     department_id: int,
     department: DepartmentUpdate,
-):
+) -> dict:
     """Update the details of a department."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -321,7 +321,7 @@ def update_department(
 
 
 @app.delete("/departments/{department_id}")
-def delete_department(department_id: int):
+def delete_department(department_id: int) -> dict:
     """Cancel or delete an appointment."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -343,7 +343,7 @@ def delete_department(department_id: int):
 
 
 @app.post("/doctors", status_code=201)
-def create_doctor(doctor: DoctorCreate):
+def create_doctor(doctor: DoctorCreate) -> dict:
     """Add a new doctor to the hospital."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -381,7 +381,7 @@ def create_doctor(doctor: DoctorCreate):
 
 
 @app.delete("/doctors/{doctor_id}")
-def delete_doctor(doctor_id: int):
+def delete_doctor(doctor_id: int) -> dict:
     """Delete a doctor from the hospital database."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -403,7 +403,7 @@ def delete_doctor(doctor_id: int):
 
 
 @app.put("/doctors/{doctor_id}")
-def update_doctor(doctor_id: int, doctor: DoctorUpdate):
+def update_doctor(doctor_id: int, doctor: DoctorUpdate) -> dict:
     """Update the details of a doctor."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -443,7 +443,7 @@ def update_doctor(doctor_id: int, doctor: DoctorUpdate):
 
 
 @app.get("/doctors/{doctor_id}")
-def get_doctor(doctor_id: int):
+def get_doctor(doctor_id: int) -> dict:
     """Get the details of a doctor using the doctor ID."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -464,7 +464,7 @@ def get_doctor(doctor_id: int):
 
 
 @app.get("/doctors")
-def get_doctors():
+def get_doctors() -> list:
     """Get the details of all doctors in the hospital."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -479,7 +479,7 @@ def get_doctors():
 
 
 @app.post("/appointments", status_code=201)
-def create_appointment(appointment: AppointmentCreate):
+def create_appointment(appointment: AppointmentCreate) -> dict:
     """Book a new appointment for a patient."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -532,7 +532,7 @@ def create_appointment(appointment: AppointmentCreate):
 
 
 @app.get("/appointments")
-def get_appointments():
+def get_appointments() -> list:
     """Get the details of all appointments."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -559,7 +559,7 @@ def get_appointments():
 
 
 @app.get("/appointments/{appointment_id}")
-def get_appointment(appointment_id: int):
+def get_appointment(appointment_id: int) -> dict:
     """Get the details of an appointment using the appointment ID."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -593,7 +593,7 @@ def get_appointment(appointment_id: int):
 
 
 @app.put("/appointments/{appointment_id}")
-def update_appointment(appointment_id: int, appointment: AppointmentUpdate):
+def update_appointment(appointment_id: int, appointment: AppointmentUpdate) -> dict:
     """Update the details of an existing appointment."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -647,7 +647,7 @@ def update_appointment(appointment_id: int, appointment: AppointmentUpdate):
 
 
 @app.delete("/appointments/{appointment_id}")
-def delete_appointment(appointment_id: int):
+def delete_appointment(appointment_id: int) -> dict:
     """Cancel or delete an appointment."""
     conn = get_connection()
     cursor = conn.cursor()

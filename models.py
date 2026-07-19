@@ -1,8 +1,9 @@
 """This file creates all the required database tables for the project."""
+
 from db import get_connection
 
 
-def create_tables():
+def create_tables() -> None:
     """Create the database tables if they do not already exist."""
     conn = get_connection()
     cursor = conn.cursor()

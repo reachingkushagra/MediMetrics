@@ -8,7 +8,7 @@ router = APIRouter(prefix="/analytics", tags=["Analytics"])
 
 
 @router.get("/dashboard")
-def dashboard():
+def dashboard() -> dict:
     """Return the overall dashboard statistics."""
     conn = get_connection()
 
@@ -31,7 +31,7 @@ def dashboard():
 
 
 @router.get("/average-wait-time")
-def average_wait_time():
+def average_wait_time() -> dict:
     """Calculate the average waiting time of patients."""
     conn = get_connection()
 
@@ -60,7 +60,7 @@ def average_wait_time():
 
 
 @router.get("/average-consultation-time")
-def average_consultation_time():
+def average_consultation_time() -> dict:
     """Calculate the average consultation time of doctors."""
     conn = get_connection()
 
@@ -90,7 +90,7 @@ def average_consultation_time():
 
 
 @router.get("/doctor-workload")
-def doctor_workload():
+def doctor_workload() -> list:
     """Show the number of appointments handled by each doctor."""
     conn = get_connection()
 
@@ -113,7 +113,7 @@ def doctor_workload():
 
 
 @router.get("/department-appointments")
-def department_appointments():
+def department_appointments() -> list:
     """Show the total appointments for each department."""
     conn = get_connection()
 
@@ -138,7 +138,7 @@ def department_appointments():
 
 
 @router.get("/peak-hours")
-def peak_hours():
+def peak_hours() -> list:
     """Find the busiest appointment hours in the hospital."""
     conn = get_connection()
 
@@ -161,7 +161,7 @@ def peak_hours():
 
 
 @router.get("/appointment-status")
-def appointment_status():
+def appointment_status() -> list:
     """Show the number of scheduled, completed, cancelled, and no-show appointments."""
     conn = get_connection()
 
