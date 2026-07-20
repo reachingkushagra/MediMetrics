@@ -98,27 +98,27 @@ Hospital insights generated using **Pandas** include:
 
 ```text
 MediMetrics/
-
 │
-├── backend/
-│   ├── app.py
-│   ├── analytics.py
-│   ├── db.py
-│   ├── models.py
-│   ├── schemas.py
-│   ├── hospital.db
-│   └── requirements.txt
-│
-├── frontend/
+├── medimetrics-frontend/
+│   ├── public/
 │   ├── src/
-│   │
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── hooks/
-│   ├── assets/
-│   └── App.js
+│   ├── package.json
+│   ├── package-lock.json
+│   └── README.md
 │
+├── tests/
+│
+├── analytics.py
+├── app.py
+├── db.py
+├── models.py
+├── schemas.py
+├── requirements.txt
+├── medimetrics.db
+├── .env.development
+├── .env.production
+├── .gitignore
+├── MediMetrics-Design.jpeg
 └── README.md
 ```
 
@@ -211,7 +211,7 @@ http://127.0.0.1:8000/docs
 Navigate to the frontend directory
 
 ```bash
-cd frontend
+cd medimetrics-frontend
 ```
 
 Install dependencies
