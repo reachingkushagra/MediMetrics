@@ -312,26 +312,30 @@ The analytics dashboard provides:
 # Screenshots
 
 ## Dashboard
+<img width="1881" height="785" alt="image" src="https://github.com/user-attachments/assets/5f5b5ffc-d7d6-42db-a792-ad3c8f6e27e2" />
+<img width="1886" height="865" alt="image" src="https://github.com/user-attachments/assets/db595bdf-eb08-4528-a0b3-3fdc19200fbd" />
+<img width="1891" height="877" alt="image" src="https://github.com/user-attachments/assets/ef2dfe43-98b2-40ae-b847-29788d06898c" />
 
 
 ---
 
 ## Patients Module
-
+<img width="1890" height="882" alt="image" src="https://github.com/user-attachments/assets/dbfdf18d-790e-4197-bb2d-61e87464e629" />
 
 ---
 
 ## Doctors Module
-
+<img width="1894" height="879" alt="image" src="https://github.com/user-attachments/assets/bedfdce5-0c73-4dd6-94d8-1adcb87e042b" />
 
 ---
 
 ## Departments Module
-
+<img width="1893" height="877" alt="image" src="https://github.com/user-attachments/assets/7b32df66-ea71-4bdc-937f-d0f80d3c9182" />
 
 ---
 
 ## Appointments Module
+<img width="1892" height="883" alt="image" src="https://github.com/user-attachments/assets/b3548641-644b-43ee-b308-0b2eea3a0372" />
 
 
 ---
