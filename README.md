@@ -63,7 +63,7 @@ Hospital insights generated using **Pandas** include:
 - Doctor Workload Analysis
 - Department-wise Appointment Distribution
 - Appointment Status Summary
-- Interactive Pie Charts
+
 
 ---
 
@@ -74,9 +74,7 @@ Hospital insights generated using **Pandas** include:
 - React.js
 - React Router
 - Axios
-- Tailwind CSS
-- Chart.js
-- React ChartJS 2
+
 
 ## Backend
 
