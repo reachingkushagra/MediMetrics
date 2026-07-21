@@ -232,22 +232,35 @@ http://localhost:3000
 ```
 
 ---
-## Unit Testing
+# Unit Testing
 
-The backend includes unit tests for validating the CRUD APIs of all modules.
+The project includes unit tests for all major API modules.
+
+### Test Coverage
+
+- Patient APIs
+- Doctor APIs
+- Department APIs
+- Appointment APIs
 
 ### Run All Tests
 
 ```bash
-python -m unittest discover tests -v
+pytest tests -v
 ```
 
-### Available Test Files
+### Sample Output
 
-- `test_patient.py` – Patient CRUD APIs
-- `test_doctor.py` – Doctor CRUD APIs
-- `test_department.py` – Department CRUD APIs
-- `test_appointment.py` – Appointment CRUD APIs
+```text
+collected 4 items
+
+tests/test_appointment.py::test_get_appointments PASSED
+tests/test_department.py::test_get_departments PASSED
+tests/test_doctor.py::test_get_doctors PASSED
+tests/test_patient.py::test_get_patients PASSED
+
+================ 4 passed in 3.28s =================
+```
 ---
 # API Endpoints
 
