@@ -101,10 +101,13 @@ MediMetrics/
 │   ├── public/
 │   ├── src/
 │   ├── package.json
-│   ├── package-lock.json
 │   └── README.md
 │
 ├── tests/
+│   ├── test_patient.py
+│   ├── test_doctor.py
+│   ├── test_department.py
+│   └── test_appointment.py
 │
 ├── analytics.py
 ├── app.py
@@ -116,10 +119,8 @@ MediMetrics/
 ├── .env.development
 ├── .env.production
 ├── .gitignore
-├── MediMetrics-Design.jpeg
 └── README.md
 ```
-
 ---
 
 # Database Design
@@ -231,7 +232,23 @@ http://localhost:3000
 ```
 
 ---
+## Unit Testing
 
+The backend includes unit tests for validating the CRUD APIs of all modules.
+
+### Run All Tests
+
+```bash
+python -m unittest discover tests -v
+```
+
+### Available Test Files
+
+- `test_patient.py` – Patient CRUD APIs
+- `test_doctor.py` – Doctor CRUD APIs
+- `test_department.py` – Department CRUD APIs
+- `test_appointment.py` – Appointment CRUD APIs
+---
 # API Endpoints
 
 ## Patients
