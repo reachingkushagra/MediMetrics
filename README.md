@@ -384,7 +384,6 @@ The analytics dashboard provides:
 **Kushagra Verma**
 
 GitHub: https://github.com/reachingkushagra
-
 LinkedIn: https://www.linkedin.com/in/reachingkushagra/
 
 ---
