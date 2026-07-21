@@ -385,7 +385,7 @@ The analytics dashboard provides:
 
 GitHub: https://github.com/reachingkushagra
 
-LinkedIn: https://www.linkedin.com/in/reachingkushagra/
+LinkedIn:https://www.linkedin.com/in/reachingkushagra/
 
 ---
 
